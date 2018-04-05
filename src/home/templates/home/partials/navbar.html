@@ -1,0 +1,27 @@
+<nav class="navbar is-info" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <h1>Photo Album Sharing Service</h1>
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      {% if not request.user.is_authenticated %}
+        <a href="{% url "register" %}" class="navbar-item">Register</a>
+        <a href="{% url "login" %}" class="navbar-item">Login</a>
+      {% else %}
+        <div class="navbar-item">
+          <div class="field">
+            <p class="control">
+              <a class="button is-primary" href="{% url "album-list" %}">
+                <span>Albums</span>
+              </a>
+            </p>
+          </div>
+        </div>
+        <a href="{% url "logout" %}" class="navbar-item">Logout</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

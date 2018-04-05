@@ -1,0 +1,170 @@
+{% extends "home/base.html" %}
+{% load filters_extra formset_tags %}
+
+{% block js_head %}
+  {{ photo_formset.media }}
+{% endblock js_head %}
+
+{% block content %}
+
+  <div class="container">
+    <h1 class="title">Create Album</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+      <!-- Album Form -->
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.auto_id }}" class="label">{{ field.label }}</label>
+          <div class="control has-icons-left">
+            {{ field|add_css_class:"input" }}
+            <span class="icon is-small is-left">
+              <i class="fas fa-{{ field.field.widget.attrs.icon }}"></i>
+            </span>
+          </div>
+          {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text | safe }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <!-- Photo Form -->
+      <div id="formset" data-formset-prefix="{{ photo_formset.prefix }}">
+        {{ photo_formset.management_form }}
+
+        <div data-formset-body>
+          <!-- New forms will be inserted in here -->
+          {% for photo_form in photo_formset %}
+            <div class="box" data-formset-form>
+
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal" style="flex-grow: 0;">
+                    <label for="{{ photo_form.title.auto_id }}" class="label">{{ photo_form.title.label }}</label>
+                  </div>
+
+                  <div class="field-body">
+
+                    <div class="field">
+                      <p class="control has-icons-left is-expanded">
+                        <input class="input" type="text" id="{{ photo_form.title.auto_id }}" name="{{ photo_form.title.html_name }}">
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-font"></i>
+                        </span>
+                      </p>
+                    </div>
+
+                    <div class="field">
+                      <div class="file is-info has-name is-fullwidth">
+                        <label for="{{ photo_form.image.auto_id }}" class="file-label">
+                          <input class="file-input" type="file" id="{{ photo_form.image.auto_id }}" name="{{ photo_form.image.html_name }}" onchange="this.parentElement.querySelector('span.file-name').innerHTML = this.files.item(0).name">
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                              Photo
+                            </span>
+                          </span>
+                          <span class="file-name">
+                            Click to add photo...
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {% for error in photo_form.errors %}
+                    <p style="color: red">{{ error }}</p>
+                  {% endfor %}
+
+                </div>
+
+              {{ photo_form.id }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <script type="form-template" data-formset-empty-form>
+          {% escapescript %}
+            <div class="box" data-formset-form>
+
+                <div class="field" style="margin-bottom: 40px;">
+                  <div class="control">
+                    {{ photo_formset.empty_form.DELETE|add_css_class:"input delete is-pulled-right" }}
+                  </div>
+                </div>
+
+                <div class="is-clearfix"></div>
+
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal" style="flex-grow: 0;">
+                    <label for="{{ photo_formset.empty_form.title.auto_id }}" class="label">{{ photo_formset.empty_form.title.label }}</label>
+                  </div>
+
+                  <div class="field-body">
+
+                    <div class="field">
+                      <p class="control has-icons-left is-expanded">
+                        <input class="input" type="text" id="{{ photo_formset.empty_form.title.auto_id }}" name="{{ photo_formset.empty_form.title.html_name }}">
+                        <span class="icon is-small is-left">
+                          <i class="fas fa-font"></i>
+                        </span>
+                      </p>
+                    </div>
+
+                    <div class="field">
+                      <div class="file is-info has-name is-fullwidth">
+                        <label for="{{ photo_formset.empty_form.image.auto_id }}" class="file-label">
+                          <input class="file-input" type="file" id="{{ photo_formset.empty_form.image.auto_id }}" name="{{ photo_formset.empty_form.image.html_name }}" onchange="this.parentElement.querySelector('span.file-name').innerHTML = this.files.item(0).name">
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                              Photo
+                            </span>
+                          </span>
+                          <span class="file-name">
+                            Click to add photo...
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              {{ photo_formset.empty_form.id }}
+            </div>
+          {% endescapescript %}
+        </script>
+
+        <!-- This button will add a new form when clicked -->
+        <div class="field is-grouped" style="margin-top: 20px;">
+          <div class="control">
+            <input type="button" class="button is-warning" value="Add another photo" data-formset-add>
+          </div>
+          <div class="control">
+            <input type="submit" class="button is-info" value="Save">
+          </div>
+        </div>
+
+        <script>
+          jQuery(function($) {
+            $("#formset").formset({
+              animateForms: true,
+              reorderMode: 'dom',
+            });
+          });
+        </script>
+
+      </div>
+
+    </form>
+  </div>
+
+{% endblock content %}

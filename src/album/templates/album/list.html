@@ -1,0 +1,31 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <div class="container">
+    <h1 class="title">Albums</h1>
+
+    <div class="field">
+      <p class="control">
+        <a class="button is-link" href="{% url "album-create" %}">
+          <span>Add</span>
+        </a>
+      </p>
+    </div>
+
+    <div class="columns is-multiline" style="margin-top: 30px;">
+      {% for album in albums %}
+        <div class="column is-narrow">
+          <figure class="image is-128x128">
+            <img src="{% static "image/red_folder.png" %}">
+          </figure>
+          <p class="has-text-centered">
+            <a class="subtitle" href="{% url "album-detail" album.uuid %}">{{ album }}</a>
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock content %}

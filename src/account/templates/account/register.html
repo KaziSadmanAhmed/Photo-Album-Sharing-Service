@@ -1,0 +1,37 @@
+{% extends "home/base.html" %}
+{% load filters_extra %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="title">Register</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.auto_id }}" class="label">{{ field.label }}</label>
+          <div class="control has-icons-left">
+            {{ field|add_css_class:"input" }}
+            <span class="icon is-small is-left">
+              <i class="fas fa-{{ field.field.widget.attrs.icon }}"></i>
+            </span>
+          </div>
+          {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text | safe }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="field">
+        <div class="control">
+          <button class="button is-link">Submit</button>
+        </div>
+      </div>
+
+      <input type="hidden" name="next" value="{{ next }}" />
+
+    </form>
+  </div>
+{% endblock %}

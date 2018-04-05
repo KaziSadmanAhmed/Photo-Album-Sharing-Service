@@ -1,0 +1,16 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+<section class="hero is-fullheight is-link">
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <h1 class="title">
+      Free photo album sharing service! Create your own album today...
+    </h1>
+    <a href="{% url "register" %}" class="button is-medium is-link is-outlined is-inverted is-rounded">Try Now!</a>
+  </div>
+</div>
+</section>
+
+{% endblock content %}

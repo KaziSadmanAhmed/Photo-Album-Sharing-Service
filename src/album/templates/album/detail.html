@@ -1,0 +1,84 @@
+{% extends "home/base.html" %}
+{% load static filters_extra %}
+
+{% block content %}
+
+  <div class="container">
+    <div class="info">
+      <h1 class="title is-marginless">Photos</h1>
+      <small>{{ album.created }}</small>
+    </div>
+    <br>
+    <div class="columns is-multiline">
+      {% for photo in album.photos.all %}
+        <div class="column is-narrow">
+          <figure class="image is-128x128">
+            <img src="{{ MEDIA_URL }}{{ photo.image.url }}">
+          </figure>
+          <p class="has-text-centered">
+            <a class="subtitle" href="{{ MEDIA_URL }}{{ photo.image.url }}" target="_blank">{{ photo }}</a>
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="ratings">
+      <h2 class="subtitle is-inline-block">Rating:</h2>
+      <div class="form">
+        <form method="post" action="{% url "album-rating" album.uuid %}">
+          {% csrf_token %}
+          <fieldset>
+            <span class="star-cb-group">
+              <input type="radio" id="rating-5" name="rating" value="5" {% if album.get_rating > 4 and album.get_rating <= 5 %}checked="checked"{% endif %} onclick="this.form.submit();"><label for="rating-5">5</label>
+              <input type="radio" id="rating-4" name="rating" value="4" {% if album.get_rating > 3 and album.get_rating <= 4 %}checked="checked"{% endif %} onclick="this.form.submit();"><label for="rating-4">4</label>
+              <input type="radio" id="rating-3" name="rating" value="3" {% if album.get_rating > 2 and album.get_rating <= 3 %}checked="checked"{% endif %} onclick="this.form.submit();"><label for="rating-3">3</label>
+              <input type="radio" id="rating-2" name="rating" value="2" {% if album.get_rating > 1 and album.get_rating <= 2 %}checked="checked"{% endif %} onclick="this.form.submit();"><label for="rating-2">2</label>
+              <input type="radio" id="rating-1" name="rating" value="1" {% if album.get_rating > 0 and album.get_rating <= 1 %}checked="checked"{% endif %} onclick="this.form.submit();"><label for="rating-1">1</label>
+            </span>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
+    <div class="comments">
+      <h2 class="subtitle">Comments:</h2>
+      {% for comment in album.comments.all %}
+        <article class="message is-info">
+          <div class="message-body">
+            {{ comment.content }}
+            <p class="has-text-grey">
+              <small>{{ comment.created }}</small>
+            </p>
+          </div>
+        </article>
+      {% endfor %}
+      <div class="comment-form">
+        <form method="post" action="{% url "album-comment" uuid %}">
+          {% csrf_token %}
+          {% for field in comment_form %}
+            <div class="field">
+              <label for="{{ field.auto_id }}" class="label">{{ field.label }}</label>
+              <div class="control has-icons-left">
+                {{ field|add_css_class:"input" }}
+                <span class="icon is-small is-left">
+                  <i class="fas fa-{{ field.field.widget.attrs.icon }}"></i>
+                </span>
+              </div>
+              {% if field.help_text %}
+                <small style="color: grey">{{ field.help_text | safe }}</small>
+              {% endif %}
+              {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="field">
+            <div class="control">
+              <button class="button is-link">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
