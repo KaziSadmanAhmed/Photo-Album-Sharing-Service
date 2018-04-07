@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.conf import settings
 
 
@@ -9,8 +10,8 @@ class Album(models.Model):
     password = models.CharField(max_length=255)
     uuid = models.CharField(max_length=32) # For generating unique random url
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
-    ratings = models.PositiveIntegerField() # Total sum of ratings
-    raters = models.PositiveIntegerField() # Total number of raters
+    ratings = models.PositiveIntegerField(blank=True, null=True) # Total sum of ratings
+    raters = models.PositiveIntegerField(blank=True, null=True) # Total number of raters
 
     class Meta:
         ordering = ("-id",)
@@ -20,6 +21,9 @@ class Album(models.Model):
             return round(self.ratings / self.raters)
         except Exception:
             return 0
+
+    def get_absolute_url(self):
+        return reverse("album-detail", args=(self.uuid,))
 
     def __str__(self):
         return self.title if self.title else "Unnamed"
