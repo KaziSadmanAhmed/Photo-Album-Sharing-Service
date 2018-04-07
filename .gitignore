@@ -105,9 +105,3 @@ settings.py
 
 # db
 db.sqlite3
-
-# migrations
-migrations/
-
-# media folder
-media/
